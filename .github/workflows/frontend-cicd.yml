@@ -26,6 +26,5 @@ jobs:
 
       - name: Đóng gói và Đẩy lên ACR
         run: |
-          cd frontend
           docker build -t opshubregistry.azurecr.io/ops-frontend:latest .
           docker push opshubregistry.azurecr.io/ops-frontend:latest
