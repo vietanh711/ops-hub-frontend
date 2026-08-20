@@ -6,9 +6,6 @@ import { useMsal, AuthenticatedTemplate, UnauthenticatedTemplate } from '@azure/
 
 const IMGBB_API_KEY = import.meta.env.VITE_IMGBB_API_KEY
 
-// ==========================================
-// 1. MODULE: SHIFT HANDOVERS (Giao ca)
-// ==========================================
 function ShiftHandover({ currentUser }) {
   const [handovers, setHandovers] = useState([])
   const [showForm, setShowForm] = useState(false)
@@ -79,7 +76,7 @@ function ShiftHandover({ currentUser }) {
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!assignee || !issueTitle) {
-      alert('Vui lòng điền Người trực và Tên sự cố.')
+      alert('Vui lòng điền Người trực và Tên sự cố')
       return
     }
 

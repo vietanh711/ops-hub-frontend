@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main # Chạy khi có code đẩy lên nhánh main
-    paths:
-      - 'frontend/**' # (Tùy chọn) Chỉ chạy nếu có thay đổi trong thư mục frontend
 
 jobs:
   build-and-deploy:
