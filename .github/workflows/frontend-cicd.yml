@@ -22,7 +22,7 @@ jobs:
       - name: Tạo file .env ảo cho Vite
         run: |
           echo "VITE_IMGBB_API_KEY=${{ secrets.VITE_IMGBB_API_KEY }}" > .env
-
+          echo "VITE_AZURE_CLIENT_ID=${{ secrets.VITE_AZURE_CLIENT_ID }}" >> .env
       - name: Đóng gói và Đẩy lên ACR
         run: |
           docker build -t opshubregistry.azurecr.io/ops-frontend:latest .
