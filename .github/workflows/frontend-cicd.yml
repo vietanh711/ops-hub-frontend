@@ -21,7 +21,6 @@ jobs:
 
       - name: Tạo file .env ảo cho Vite
         run: |
-          cd frontend # Đổi thành tên thư mục Frontend thực tế của bạn
           echo "VITE_IMGBB_API_KEY=${{ secrets.VITE_IMGBB_API_KEY }}" > .env
 
       - name: Đóng gói và Đẩy lên ACR
