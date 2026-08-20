@@ -911,7 +911,7 @@ function App() {
         <div style={{ display: 'flex', height: '100vh', justifyContent: 'center', alignItems: 'center', backgroundColor: '#f4f6f8' }}>
           <div style={{ backgroundColor: '#fff', padding: '40px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', textAlign: 'center' }}>
             <h1 style={{ color: '#2c3e50', marginBottom: '50px' }}>Internal Ops Hub</h1>
-            <p style={{ color: '#666', marginBottom: '30px' }}>Vui lòng đăng nhập bằng tài khoản Microsoft.</p>
+            <p style={{ color: '#666', marginBottom: '30px' }}>Vui lòng đăng nhập bằng tài khoản Microsoft của bạn.</p>
             <button onClick={handleLogin} style={{ padding: '10px 20px', backgroundColor: '#0078d4', color: 'white', border: 'none', borderRadius: '4px', fontSize: '16px', cursor: 'pointer', fontWeight: 'bold' }}>
               Đăng nhập bằng Microsoft
             </button>
