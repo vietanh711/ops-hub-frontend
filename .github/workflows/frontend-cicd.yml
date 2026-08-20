@@ -1,0 +1,33 @@
+name: Build and Push Frontend to ACR
+
+on:
+  push:
+    branches:
+      - main # Chạy khi có code đẩy lên nhánh main
+    paths:
+      - 'frontend/**' # (Tùy chọn) Chỉ chạy nếu có thay đổi trong thư mục frontend
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Login to Azure Container Registry
+        uses: azure/docker-login@v1
+        with:
+          login-server: opshubregistry.azurecr.io
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Tạo file .env ảo cho Vite
+        run: |
+          cd frontend # Đổi thành tên thư mục Frontend thực tế của bạn
+          echo "VITE_IMGBB_API_KEY=${{ secrets.VITE_IMGBB_API_KEY }}" > .env
+
+      - name: Đóng gói và Đẩy lên ACR
+        run: |
+          cd frontend
+          docker build -t opshubregistry.azurecr.io/ops-frontend:latest .
+          docker push opshubregistry.azurecr.io/ops-frontend:latest
