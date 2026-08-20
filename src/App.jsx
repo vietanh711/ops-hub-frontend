@@ -58,14 +58,12 @@ function ShiftHandover({ currentUser }) {
     });
   }
 
-  // ==========================================
-  // LOGIC GỘP NHÓM (GROUPING) THEO NGƯỜI TRỰC
-  // ==========================================
+
   const groupedHandovers = handovers.reduce((groups, item) => {
-    const key = item.assignee.trim().toLowerCase(); // Gộp những tên giống nhau (bỏ qua viết hoa/thường)
+    const key = item.assignee.trim().toLowerCase(); 
     if (!groups[key]) {
       groups[key] = {
-        originalName: item.assignee, // Giữ lại tên gốc để hiển thị
+        originalName: item.assignee, 
         items: []
       };
     }
@@ -97,13 +95,11 @@ function ShiftHandover({ currentUser }) {
     }
   }
 
-  // Hàm xử lý khi bấm nút "+ Thêm sự cố" ở từng nhóm
   const handleQuickAdd = (name) => {
     setAssignee(name);
     setIssueTitle('');
     setHandoverNote('');
     setShowForm(true);
-    // Cuộn trang lên vị trí form mượt mà
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -205,7 +201,6 @@ function ShiftHandover({ currentUser }) {
         </div>
       )}
 
-      {/* FORM THÊM MỚI */}
       {showForm && (
         <div style={{ backgroundColor: '#fff', padding: '20px', borderRadius: '4px', border: '1px solid #ddd', marginBottom: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
           <form onSubmit={handleSubmit} style={{ display: 'flex', gap: '15px', alignItems: 'flex-start' }}>
@@ -228,7 +223,6 @@ function ShiftHandover({ currentUser }) {
         </div>
       )}
 
-      {/* BẢNG HIỂN THỊ ĐÃ GỘP NHÓM */}
       <div style={{ backgroundColor: '#fff', borderRadius: '4px', border: '1px solid #ddd', overflow: 'hidden' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
           <thead>
@@ -246,13 +240,11 @@ function ShiftHandover({ currentUser }) {
               <tr><td colSpan="5" style={{ padding: '15px', textAlign: 'center', color: '#666' }}>Chưa có dữ liệu ca trực.</td></tr>
             </tbody>
           ) : (
-            // Dùng nhiều thẻ tbody để tách biệt từng nhóm người trực
             Object.values(groupedHandovers).map((group, groupIndex) => (
               <tbody key={groupIndex} style={{ borderBottom: '2px solid #999' }}>
                 {group.items.map((item, index) => (
                   <tr key={item.id} style={{ borderBottom: '1px solid #eee' }}>
                     
-                    {/* Cột Người Trực: Chỉ hiển thị ở hàng đầu tiên của nhóm và gộp hàng (rowSpan) */}
                     {index === 0 && (
                       <td 
                         rowSpan={group.items.length + 1} 
@@ -296,7 +288,6 @@ function ShiftHandover({ currentUser }) {
                   </tr>
                 ))}
                 
-                {/* Hàng chứa nút thêm sự cố bổ sung cho người này */}
                 <tr style={{ backgroundColor: '#fcfcfc' }}>
                   <td colSpan="4" style={{ padding: '8px 15px', borderLeft: '1px solid #ddd' }}>
                     <button 
@@ -316,16 +307,11 @@ function ShiftHandover({ currentUser }) {
   )
 }
 
-
-// ==========================================
-// 2. MODULE: KNOWLEDGE BASE (Tài liệu)
-// ==========================================
 function KnowledgeBase() {
   const [docs, setDocs] = useState([])
   const [showForm, setShowForm] = useState(false)
   const [editingDocId, setEditingDocId] = useState(null)
 
-  // State cho form
   const [title, setTitle] = useState('')
   const [category, setCategory] = useState('')
   const [content, setContent] = useState('')
@@ -347,19 +333,16 @@ function KnowledgeBase() {
     setEditingDocId(null)
   }
 
-  // Xử lý khi chọn ảnh bằng nút Upload
   const handleImageUpload = (e) => {
     const file = e.target.files[0]
     processImageFile(file)
   }
 
-  // Xử lý khi ấn Ctrl+V (Paste) vào ô text
   const handlePaste = (e) => {
     const items = e.clipboardData.items;
     for (let i = 0; i < items.length; i++) {
-      // Nếu dữ liệu paste vào là hình ảnh
       if (items[i].type.indexOf('image') !== -1) {
-        e.preventDefault(); // Chặn hành vi paste text mặc định của trình duyệt
+        e.preventDefault(); 
         const file = items[i].getAsFile();
         processImageFile(file);
         break;
@@ -367,8 +350,6 @@ function KnowledgeBase() {
     }
   }
 
-  // Hàm dùng chung để xử lý file ảnh chuyển thành Base64
-  // Hàm xử lý file ảnh: Đẩy lên Cloud và lấy Link ngắn
   const processImageFile = async (file) => {
     if (file) {
       if (file.size > 2 * 1024 * 1024) {
@@ -380,13 +361,10 @@ function KnowledgeBase() {
       formData.append('image', file)
 
       try {
-        // Gọi API đẩy ảnh lên Cloud
         const res = await axios.post(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, formData)
         
-        // Lấy đường link ảnh (URL) trả về
         const imageUrl = res.data.data.url
         
-        // Chèn gọn gàng vào Markdown
         setContent((prevContent) => prevContent + `\n\n![Ảnh minh họa](${imageUrl})\n\n`)
       } catch (error) {
         console.error("Lỗi khi upload ảnh:", error)
@@ -494,7 +472,7 @@ function KnowledgeBase() {
               <textarea 
                 value={content} 
                 onChange={(e) => setContent(e.target.value)}
-                onPaste={handlePaste} // Gọi hàm lắng nghe sự kiện Paste ở đây
+                onPaste={handlePaste} 
                 rows="8"
                 style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px', fontFamily: 'monospace', backgroundColor: '#fff', boxSizing: 'border-box' }} 
                 placeholder="# Tiêu đề lớn&#10;Có thể sử dụng Snipping Tool (Ctrl+Shift+S) chụp ảnh rồi ấn Ctrl+V thẳng vào ô này..."
@@ -529,18 +507,17 @@ function KnowledgeBase() {
             <div style={{ backgroundColor: '#f8f9fa', padding: '15px', borderRadius: '4px', fontSize: '14px', lineHeight: '1.6', border: '1px solid #e1e4e8', overflowX: 'auto' }}>
               <ReactMarkdown 
   components={{
-    // Can thiệp vào cách React Markdown render thẻ ảnh
     img: ({node, ...props}) => (
       <img 
         {...props} 
         style={{ 
-          maxWidth: '100%',       // Không bao giờ được rộng hơn khung chứa
-          maxHeight: '500px',     // Cố định chiều cao tối đa là 500px (bạn có thể tự chỉnh)
-          objectFit: 'contain',   // Giữ nguyên tỷ lệ ảnh, không bị méo
-          display: 'block',       // Đẩy ảnh đứng thành 1 dòng riêng
-          margin: '15px 0',       // Tạo khoảng cách trên dưới cho đẹp
-          borderRadius: '4px',    // Bo góc nhẹ cho ảnh
-          border: '1px solid #ddd'// Viền mỏng bao quanh ảnh
+          maxWidth: '100%',      
+          maxHeight: '500px',     
+          objectFit: 'contain',   
+          display: 'block',       
+          margin: '15px 0',      
+          borderRadius: '4px',  
+          border: '1px solid #ddd'
         }} 
       />
     )
@@ -555,15 +532,12 @@ function KnowledgeBase() {
     </div>
   )
 }
-// ==========================================
-// 3. MODULE: TRAINING & QA (Đào tạo)
-// ==========================================
+
 function TrainingQA() {
   const [qaList, setQaList] = useState([])
   const [showForm, setShowForm] = useState(false)
   const [editingQaId, setEditingQaId] = useState(null)
 
-  // State cho form
   const [question, setQuestion] = useState('')
   const [answer, setAnswer] = useState('')
   const [tagsInput, setTagsInput] = useState('')
@@ -585,7 +559,6 @@ function TrainingQA() {
     setEditingQaId(null)
   }
 
-  // --- HÀM XỬ LÝ ẢNH CHO Q&A ---
   const handleImageUpload = (e) => {
     const file = e.target.files[0]
     processImageFile(file)
@@ -623,7 +596,6 @@ function TrainingQA() {
       }
     }
   }
-  // ------------------------------
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -699,7 +671,6 @@ function TrainingQA() {
         </button>
       </div>
 
-      {/* FORM THÊM Q&A */}
       {showForm && (
         <div style={{ backgroundColor: '#fff', padding: '20px', borderRadius: '4px', border: '1px solid #ddd', marginBottom: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
@@ -708,7 +679,6 @@ function TrainingQA() {
               <input type="text" value={question} onChange={(e) => setQuestion(e.target.value)} style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }} placeholder="VD: Khắc phục lỗi lệch tồn kho?" />
             </div>
 
-            {/* BOX NHẬP NỘI DUNG MỚI (Hỗ trợ upload, Markdown và Auto-resize) */}
             <div style={{ border: '1px solid #ccc', borderRadius: '4px', padding: '10px', backgroundColor: '#fafafa' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                 <label style={{ fontSize: '14px', color: '#555', fontWeight: 'bold' }}>Hướng dẫn giải quyết / Đáp án (Hỗ trợ Markdown & Paste ảnh Ctrl+V) *</label>
@@ -736,9 +706,9 @@ function TrainingQA() {
                   border: '1px solid #ddd', 
                   borderRadius: '4px',
                   minHeight: '75px',
-                  maxHeight: '300px', // Giới hạn chiều cao tối đa
-                  overflowY: 'auto',  // Hiển thị thanh cuộn nếu vượt quá 300px
-                  resize: 'none',     // Tắt nút kéo giãn thủ công
+                  maxHeight: '300px',
+                  overflowY: 'auto',  
+                  resize: 'none',     
                   fontFamily: 'monospace', 
                   backgroundColor: '#fff', 
                   boxSizing: 'border-box'
@@ -809,9 +779,7 @@ function TrainingQA() {
   )
 }
 
-// ==========================================
-// COMPONENT: SIDEBAR LINK (Xử lý Hover & Active)
-// ==========================================
+
 function SidebarLink({ to, children }) {
   const location = useLocation()
   const isActive = location.pathname === to
@@ -824,14 +792,14 @@ function SidebarLink({ to, children }) {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         style={{ 
-          color: isActive ? '#ffffff' : (isHovered ? '#60a5fa' : '#cbd5e1'), // Trắng nếu active, xanh nhạt nếu hover
-          backgroundColor: isActive ? '#3b82f6' : (isHovered ? '#334155' : 'transparent'), // Xanh dương nếu active, xám đậm nếu hover
+          color: isActive ? '#ffffff' : (isHovered ? '#60a5fa' : '#cbd5e1'), 
+          backgroundColor: isActive ? '#3b82f6' : (isHovered ? '#334155' : 'transparent'), 
           textDecoration: 'none', 
           fontSize: '15px', 
           display: 'block',
           padding: '10px 15px',
-          borderRadius: '6px', // Bo góc nhìn hiện đại hơn
-          transition: 'all 0.2s ease-in-out', // Hiệu ứng chuyển màu mượt
+          borderRadius: '6px', 
+          transition: 'all 0.2s ease-in-out', 
           fontWeight: isActive ? 'bold' : 'normal'
         }}
       >
@@ -841,9 +809,6 @@ function SidebarLink({ to, children }) {
   )
 }
 
-// ==========================================
-// 4. MAIN APP BỐ CỤC (LAYOUT)
-// ==========================================
 function MainLayout() {
   const { instance, accounts } = useMsal()
   const [dbUser, setDbUser] = useState(null)
@@ -900,7 +865,6 @@ function MainLayout() {
 function App() {
   const { instance } = useMsal()
 
-  // Đổi từ loginPopup sang loginRedirect
   const handleLogin = () => {
     instance.loginRedirect({ scopes: ['user.read'] }).catch(e => console.error(e))
   }

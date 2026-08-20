@@ -9,18 +9,16 @@ const msalConfig = {
   auth: {
     clientId: import.meta.env.VITE_AZURE_CLIENT_ID,
     authority: "https://login.microsoftonline.com/common",
-    redirectUri: window.location.origin, // Tự động lấy localhost hoặc domain thật sau này
+    redirectUri: window.location.origin, 
     navigateToLoginRequestUrl: false
   }
 };
 
 const msalInstance = new PublicClientApplication(msalConfig);
 
-// BẮT BUỘC: Khởi tạo MSAL và xử lý kết quả Redirect trước khi Render React
 msalInstance.initialize().then(() => {
   return msalInstance.handleRedirectPromise();
 }).then(() => {
-  // Nếu có tài khoản đã đăng nhập, set làm tài khoản mặc định
   const accounts = msalInstance.getAllAccounts();
   if (accounts.length > 0) {
     msalInstance.setActiveAccount(accounts[0]);
