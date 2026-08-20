@@ -1,17 +1,150 @@
-# React + Vite
+﻿# Internal Ops Hub Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend của **Internal Ops Hub**, ứng dụng web nội bộ hỗ trợ Operation Team trong việc quản lý ca trực, bàn giao sự cố và lưu trữ kiến thức vận hành.
 
-Currently, two official plugins are available:
+Ứng dụng được xây dựng theo mô hình **Single Page Application (SPA)**, sử dụng React và Vite, kết nối với Backend thông qua REST API.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Tính năng chính
 
-## React Compiler
+* **Quản lý ca trực và bàn giao:** theo dõi sự cố, công việc và trạng thái xử lý giữa các ca trực.
+* **Quản lý công việc:** hỗ trợ giao và theo dõi task theo vai trò của người dùng.
+* **Kho tài liệu:** lưu trữ và tra cứu tài liệu nghiệp vụ dưới dạng Markdown, hỗ trợ hình ảnh.
+* **Đào tạo và hỏi đáp:** quản lý bộ câu hỏi, đáp án và kiến thức phục vụ đào tạo nội bộ.
+* **Xác thực người dùng:** đăng nhập bằng tài khoản Microsoft thông qua Microsoft Entra ID và phân quyền theo vai trò.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Công nghệ sử dụng
 
-## Expanding the ESLint configuration
+* React
+* Vite
+* React Router
+* Axios
+* Microsoft MSAL
+* React Markdown
+* Docker
+* Nginx
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-"# ops-hub-frontend" 
+## Kiến trúc tổng quan
+
+```text
+User
+  ↓
+Microsoft Entra ID
+  ↓
+React Frontend
+  ↓
+REST API
+  ↓
+FastAPI Backend
+  ↓
+MongoDB
+```
+
+## Cấu trúc project
+
+```text
+ops-frontend/
+├── src/
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── index.css
+├── public/
+├── Dockerfile
+├── .env.example
+├── package.json
+└── vite.config.js
+```
+
+## Cấu hình môi trường
+
+Tạo file `.env` dựa trên `.env.example` và cấu hình các thông tin cần thiết cho:
+
+* Microsoft Entra ID
+* Dịch vụ lưu trữ hình ảnh
+
+Không commit các thông tin nhạy cảm vào Git.
+
+## Chạy project
+
+### 1. Cài đặt dependencies
+
+```bash
+npm install
+```
+
+### 2. Cấu hình environment
+
+```bash
+copy .env.example .env
+```
+
+Sau đó cập nhật các giá trị cần thiết trong `.env`.
+
+### 3. Chạy môi trường development
+
+```bash
+npm run dev
+```
+
+Ứng dụng mặc định chạy tại:
+
+```text
+http://localhost:5173
+```
+
+## Build production
+
+```bash
+npm run build
+```
+
+Thư mục `dist/` chứa kết quả build production.
+
+## Docker
+
+Frontend được đóng gói thành Docker image và chạy dưới Nginx.
+
+```bash
+docker build -t ops-frontend .
+docker run -p 80:80 ops-frontend
+```
+
+Ứng dụng có thể truy cập tại:
+
+```text
+http://localhost
+```
+
+## CI/CD
+
+Frontend sử dụng **GitHub Actions** để tự động hóa quá trình build và triển khai.
+
+Quy trình tổng quát:
+
+```text
+GitHub
+   ↓
+GitHub Actions
+   ↓
+Docker Image
+   ↓
+Azure Container Registry
+   ↓
+Azure App Service
+```
+
+Pipeline được kích hoạt khi mã nguồn được cập nhật lên nhánh `main`.
+
+## Triển khai
+
+Frontend hiện được triển khai trong môi trường Docker trên nền tảng Azure và kết nối với Backend thông qua REST API.
+
+## Trạng thái
+
+Các chức năng chính của frontend đã được hoàn thiện và triển khai thử nghiệm, bao gồm:
+
+* Xác thực Microsoft
+* Quản lý ca trực và bàn giao
+* Quản lý công việc
+* Kho tài liệu kiến thức
+* Đào tạo và hỏi đáp
+* Docker và CI/CD
